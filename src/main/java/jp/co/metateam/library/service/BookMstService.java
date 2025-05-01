@@ -43,77 +43,72 @@ public class BookMstService {
         return bookMstDtoList;
     }
     
-     @Transactional
+    @Transactional
     public void save(BookMstDto bookMstDto) {
         try {
-            // AccountDtoからAccountへの変換
+            // DTO → Entityへの変換
             BookMst bookMst = new BookMst();
-        
-
-            
             bookMst.setTitle(bookMstDto.getTitle());
             bookMst.setIsbn(bookMstDto.getIsbn());
-
-        
-
-            // データベースへの保存
+    
+            // データベース保存
             this.bookMstRepository.save(bookMst);
         } catch (Exception e) {
+            // 例外は上位に投げてコントローラー側で処理
             throw e;
         }
     }
-    public boolean isValidTitle(String title, Model model){
-
-        
-        // 書籍名が空白だった時
-        if (StringUtils.isEmpty(title)) {
     
+    // タイトルバリデーション
+    public boolean isValidTitle(String title, Model model) {
+        if (StringUtils.isEmpty(title)) {
             model.addAttribute("errTitle", "書籍名を入力してください");
             return true;
         }
-        // 書籍名の桁数が255文字以上のとき
         if (title.length() > 255) {
-    
             model.addAttribute("errTitle", "書籍名は255文字以内で入力してください");
             return true;
         }
         return false;
     }
-    // ISBNが入力されているか
-    public boolean isValidIsbn(String isbn, Model model){
     
-        // ISBNが空白だった時
+    // ISBNバリデーション（空、桁数、数字チェック）
+    public boolean isValidIsbn(String isbn, Model model) {
+        List<String> errorIsbnList = new ArrayList<>();
+    
         if (StringUtils.isEmpty(isbn)) {
+            // 未入力
+            errorIsbnList.add("ISBNを入力してください");
+            model.addAttribute("errorisbnlist", errorIsbnList);
+            return true;
+        } else {
+            // 桁数
+            if (isbn.length() != 13) {
+                errorIsbnList.add("ISBNは13文字で入力してください");
+            }
+            // 数字
+            if (!isbn.matches("\\d+")) {
+                errorIsbnList.add("ISBNは半角数字で入力してください");
+            }
+        }
     
-            model.addAttribute("errIsbn", "ISBNを入力してください");
+        if (!errorIsbnList.isEmpty()) {
+            model.addAttribute("errorisbnlist", errorIsbnList);
             return true;
         }
-        // ISBNが13桁ではない
-        if (isbn.length() != 13) {
     
-            model.addAttribute("errIsbn", "ISBNは13文字で入力してください");
-            return true;
-        }
-        // ISBNが半角数字以外で入力されている
-        if (!isbn.matches("\\d+")) {
-    
-            model.addAttribute("errIsbn", "ISBNは半角数字で入力してください");
-            return true;
-        }
         return false;
     }
-    // 重複チェック用のメソッド
-    public boolean selectByIsbn(String isbn, Model model){
+    
+    // ISBN重複チェック
+    public boolean selectByIsbn(String isbn, Model model) {
         List<BookMst> books = this.bookMstRepository.selectByIsbn(isbn);
     
-        if (books.size() != 0) {
+        if (!books.isEmpty()) {
+            // HTML側で使用するキー名に合わせて属性名を修正（errIsbn に）
             model.addAttribute("errIsbn", "このISBNは既に登録されています");
             return true;
         }
         return false;
     }
-    
-}
-
-
-
+}    

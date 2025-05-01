@@ -58,44 +58,49 @@ public class BookController {
   
     //
     @PostMapping("/book/add")
-    public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra,Model model) {
+    public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra, Model model) {
         try {
+
+            // 入力された書籍名にエラーがないか
             boolean ValidTitle = bookMstService.isValidTitle(bookMstDto.getTitle(), model);
             if (ValidTitle) {
-                model.addAttribute("bookMstDto", bookMstDto);
+                model.addAttribute("bookMatDto", bookMstDto);
+                // return "/book/add";
             }
+            // 入力されたISBNにエラーがないか
             boolean ValidIsbn = bookMstService.isValidIsbn(bookMstDto.getIsbn(), model);
             if (ValidIsbn) {
-                model.addAttribute("bookMstDto", bookMstDto);
+                model.addAttribute("bookMatDto", bookMstDto);
+                // return "/book/add";
             }
+            // 書籍名・ISBNどちらかにエラーがある場合は遷移しない
             if (ValidTitle||ValidIsbn) {
                 return "/book/add";
             }
+
+
+           // 重複チェック
+            // ISBNがすでにデータベースにあるか調べる
             boolean isbnExist = bookMstService.selectByIsbn(bookMstDto.getIsbn(), model);
+
+            // すでにINBSが存在するときエラー表示
             if (isbnExist) {
+
                 model.addAttribute("bookMstDto", bookMstDto);
                 return "/book/add";
+
             }
 
-
-            
-                
+            // エラーなしの場合DBに登録
             this.bookMstService.save(bookMstDto);
-            
+
+            // 一覧画面に遷移
             return "redirect:/book/index";
+
         } catch (Exception e) {
+
             return "redirect:/book/add";
         }
-        
-
-     }
-
     }
 
-        
-
-    
-
-    
-
-
+}

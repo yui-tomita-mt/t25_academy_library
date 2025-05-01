@@ -12,8 +12,34 @@
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
                 <div class="page_title">書籍一覧</div>
+                <!-- ここから追記 -->
+                <!-- 書籍登録用のボタン（クリックされたら登録画面へ遷移） -->
+                <div class="button-area">
+                    <button onclick="location.href='./add'">書籍登録</button>
+                </div>
+               
+                <!-- 登録情報の全件表示用テーブル -->
+                <table class="books_table">
+                    <thead>
+                        <tr>
+                            <th>書籍名</th>
+                            <th>ISBN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- DBの情報を取得し"book"に格納し件数分ループを回す -->
+                        <tr th:each="book : ${bookMstList}">
+                            <!-- "book"内のタイトルを順番に取り出し表示 -->
+                            <td th:text="${book.title}"></td>
+                            <!-- "book"内のISBNを順番に取り出し表示 -->
+                            <td th:text="${book.isbn}"></td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
     <div th:replace="~{common :: footer}"></div>
-</body>
+</body>             
+                        
