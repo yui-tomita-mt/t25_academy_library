@@ -1,27 +1,27 @@
 .books_table {
- width: 45%;
- text-align: left;
- border-collapse: collapse;
- border-spacing: 0;
- border-radius:10px;
+  width: 80%;
+  text-align: left;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-radius: 10px;
 }
 
-.books_table th{
+.books_table th {
   padding: 10px;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
   padding: 13px;
   border: solid 1px #B9B9B9;
   color: #545454;
-  font-size: 12px;
+  font-size: 15px;
 }
 
-.books_table td{
+.books_table td {
   text-align: left;
   vertical-align: middle;
   background: #FFFFFF;
   border: solid 1px #B9B9B9;
   padding: 15px;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .books_table {
@@ -31,46 +31,68 @@
 
 .button-area {
   text-align: right;
-  margin-bottom: 10px; /* テーブルとの間に余白を入れる */
+  margin-bottom: 10px;
+  /* テーブルとの間に余白を入れる */
+}
+
+.add-button {
+  align-items: center;
+  width: 100px;
+  height: 35px;
+  font-size: 12px;
+  background-color: #9CF2D3;
+  color: #545454;
+  border-radius: 0.5rem;
+  border: none;
+}
+
+button img {
+  width: 15px;
+  height: 15px;/* 高さは自動調整 */
+  position: relative;/* 今の位置を基準 */
+  top: 3px; /* 上から*/
+  left: -3px;/* 左から*/
 }
 
 
-.books_table td:nth-child(1){
+.books_table td:nth-child(1) {
   width: 100%;
 }
 
-.books_table td:nth-child(1) .book_title_contents{
+.books_table td:nth-child(1) .book_title_contents {
   display: flex;
   align-items: center;
 }
 
-.books_table td:nth-child(1) .book_title_contents span{
+.books_table td:nth-child(1) .book_title_contents span {
   display: inline-block;
   margin: left 50px;
 }
 
-.books_table td .stockcount{
+.books_table td .stockcount {
   display: inline-block;
   width: 50px;
   text-align: center;
 }
 
-.books_table td img{
+.books_table td img {
   margin: 8px 2px 0 2px;
   height: auto;
 }
-.books_table td img:hover{
+
+.books_table td img:hover {
   cursor: pointer;
   opacity: 0.6;
 }
-.books_table td .edit_icon{
-  width:23px;
-}
-.books_table td .trash_icon{
-  width:19px;
+
+.books_table td .edit_icon {
+  width: 23px;
 }
 
-.books_table td a{
+.books_table td .trash_icon {
+  width: 19px;
+}
+
+.books_table td a {
   color: #0000EE;
 }
-

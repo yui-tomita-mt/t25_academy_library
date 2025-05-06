@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{common :: meta_header('書籍一覧',~{::link},~{::script})}">
     <title th:text="${title}+' | MTLibrary'"></title>
     <link rel="stylesheet" th:href="@{/css/book/index.css}" />
     <script type="text/javascript" th:src="@{/js/book/index.js}"></script>
 </head>
+
 <body>
     <div class="contents">
         <div th:replace="~{common :: main_sidebar}"></div>
@@ -15,9 +17,12 @@
                 <!-- ここから追記 -->
                 <!-- 書籍登録用のボタン（クリックされたら登録画面へ遷移） -->
                 <div class="button-area">
-                    <button onclick="location.href='./add'">書籍登録</button>
+                    <button class="add-button">
+                        <a onclick="location.href='./add'">
+                            <img th:src="@{/images/icons/add.png}" alt="アイコン" />書籍登録</a>
+                    </button>
                 </div>
-               
+
                 <!-- 登録情報の全件表示用テーブル -->
                 <table class="books_table">
                     <thead>
@@ -33,7 +38,7 @@
                             <td th:text="${book.title}"></td>
                             <!-- "book"内のISBNを順番に取り出し表示 -->
                             <td th:text="${book.isbn}"></td>
-                            
+
                         </tr>
                     </tbody>
                 </table>
@@ -41,5 +46,4 @@
         </div>
     </div>
     <div th:replace="~{common :: footer}"></div>
-</body>             
-                        
+</body>

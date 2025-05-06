@@ -24,34 +24,33 @@
                         </div>
                         <div>
                             <div class="form_row">
-                            <label for="title">書籍名*:</label><br>
-                            <input class="form_input" type="text" id="title" name="title" th:field="*{title}" placeholder="書籍名を入力"><br>
+                                <label for="title">書籍名*:</label><br>
+                                <input class="form_input" type="text" id="title" name="title" th:field="*{title}"
+                                    placeholder="書籍名を入力"><br>
                             </div>
                             <div class="error_msg" th:if="${errTitle}">
                                 <p th:text="${errTitle}" style="color: red;"></p>
                             </div>
                         </div>
-                        <div class="form_row">
-                            <label for="isbn">ISBN*:</label><br>
-                            <input class="form_input" type="text" id="isbn" name="isbn" th:field="*{isbn}" placeholder="ISBNを入力"><br>
+                        <div>
+                            <div class="form_row">
+                                <label for="isbn">ISBN*:</label><br>
+                                <input class="form_input" type="text" id="isbn" name="isbn" th:field="*{isbn}"
+                                    placeholder="ISBNを入力"><br>
+                            </div>
+                            <div class="error_msg" th:if="${errIsbn}">
+                                <p th:text="${errIsbn}" style="color: red;"></p>
+                            </div>
                         </div>
-                        <div class="error_msg" th:if="${errorisbnlist != null}">
-                            <ul>
-                                <li th:each="err : ${errorisbnlist}" th:text="${err}"></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="error_msg" th:if="${errisbn != null}">
-                        <p th:text="${errisbn}"></p>
-                    </div>
-                        </div>
-                    <div class="button_area">
-                        <input id="submit_btn" type="submit" value="保存">
-                    </div>
-                    </form>
+
                 </div>
+                <div class="button_area">
+                    <input id="submit_btn" type="submit" value="保存">
+                </div>
+                </form>
             </div>
         </div>
+    </div>
     </div>
     <div th:replace="~{common :: footer}"></div>
 </body>
