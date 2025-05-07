@@ -56,7 +56,6 @@ public class BookController {
         return "book/add";
     }
 
-    //
     @PostMapping("/book/add")
     public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra,
             Model model) {
@@ -64,19 +63,19 @@ public class BookController {
 
             boolean errFlg = false;
             // 入力された書籍名にエラーがないか
-            boolean ValidTitle = bookMstService.isValidTitle(bookMstDto.getTitle(), model);
-            if (ValidTitle) {
+            boolean isValidTitle = bookMstService.isValidTitle(bookMstDto.getTitle(), model);
+            if (isValidTitle) {
                 model.addAttribute("bookMstDto", bookMstDto);
                 errFlg = true;
             }
             // 入力されたISBNにエラーがないか
-            boolean ValidIsbn = bookMstService.isValidIsbn(bookMstDto.getIsbn(), model);
-            if (ValidIsbn) {
+            boolean isValidIsbn = bookMstService.isValidIsbn(bookMstDto.getIsbn(), model);
+            if (isValidIsbn) {
                 model.addAttribute("bookMstDto", bookMstDto);
                 errFlg = true;
             }
             // 重複チェック
-            if (!ValidIsbn) {
+            if (!isValidIsbn) {
                 // ISBNがすでにデータベースにあるか調べる
                 boolean isbnExist = bookMstService.selectByIsbn(bookMstDto.getIsbn(), model);
                 // すでにINBSが存在するときエラー表示
@@ -89,18 +88,6 @@ public class BookController {
             if (errFlg = true) {
                 return "/book/add";
             }
-
-            /*
-             * 重複チェック
-             * // ISBNがすでにデータベースにあるか調べる
-             * boolean isbnExist = bookMstService.selectByIsbn(bookMstDto.getIsbn(), model);
-             * 
-             * // すでにINBSが存在するときエラー表示
-             * if (isbnExist) {
-             * model.addAttribute("bookMstDto", bookMstDto);
-             * return "/book/add";
-             * }
-             */
 
             // エラーなしの場合DBに登録
             this.bookMstService.save(bookMstDto);

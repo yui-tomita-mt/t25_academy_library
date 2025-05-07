@@ -72,38 +72,7 @@ public class BookMstService {
         return false;
     }
 
-    /*// ISBNバリデーション（空、桁数、数字チェック）
-    public boolean isValidIsbn(String isbn, Model model) {
-        boolean errFlg = false;
-        List<String> errorIsbnList = new ArrayList<>();
-        List<BookMst> existingBookMsts = this.bookMstRepository.selectByIsbn(isbn);
-
-        if (StringUtils.isEmpty(isbn)) {
-            // 未入力
-            errorIsbnList.add("ISBNを入力してください");
-            errFlg = true;
-            //model.addAttribute("errorisbn", errorIsbnList);
-        }
-        
-        // 桁数
-        if (isbn.length() != 13) {
-            errorIsbnList.add("ISBNは13文字で入力してください");
-            errFlg = true;
-        }
-        
-        // 数字
-        if (!isbn.matches("\\d+")) {
-            errorIsbnList.add("ISBNは半角数字で入力してください");
-            errFlg = true;
-        }
-
-        if (!errorIsbnList.isEmpty()) {
-            model.addAttribute("errorisbn", "errorisbnlist");
-        }
-        return errFlg;
-    }*/
-
-     // ISBNが入力されているか
+     // ISBNバリデーション
      public boolean isValidIsbn(String isbn, Model model){    
         // ISBNが空白だった時
         if (StringUtils.isBlank(isbn)) {
