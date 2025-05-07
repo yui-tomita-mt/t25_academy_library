@@ -79,6 +79,12 @@ public class BookMstService {
             model.addAttribute("errIsbn", "ISBNを入力してください");
             return true;
         }
+
+        if (isbn.length() != 13 && !isbn.matches("\\d+")) {
+                model.addAttribute("errIsbn", "・ISBNは13文字で入力してください　・ISBNは半角数字で入力してください");
+            return true;
+        }
+        
         // ISBNが13桁ではない
         if (isbn.length() != 13) {
             model.addAttribute("errIsbn", "ISBNは13文字で入力してください");
@@ -90,7 +96,8 @@ public class BookMstService {
             return true;
         }
         return false;
-    }
+        }
+
 
     public boolean selectByIsbn(String isbn, Model model) {
         List<BookMst> selectIsbn=this.bookMstRepository.selectByIsbn(isbn);
