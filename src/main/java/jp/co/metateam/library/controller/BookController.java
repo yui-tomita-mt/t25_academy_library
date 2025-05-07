@@ -29,11 +29,11 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @Controller
 public class BookController {
-    
+
     private final BookMstService bookMstService;
 
     @Autowired
-    public BookController(BookMstService bookMstService){
+    public BookController(BookMstService bookMstService) {
         this.bookMstService = bookMstService;
     }
 
@@ -41,10 +41,10 @@ public class BookController {
     public String index(Model model) {
         // 書籍を全件取得
         List<BookMstDto> bookMstList = this.bookMstService.findAvailableWithStockCount();
-        
+
         model.addAttribute("bookMstList", bookMstList);
         return "book/index";
- 
+
     }
 
     @GetMapping("/book/add")
@@ -52,50 +52,53 @@ public class BookController {
         if (!model.containsAttribute("bookMstDto")) {
             model.addAttribute("bookMstDto", new BookMstDto());
         }
-    
+
         return "book/add";
     }
-  
-    
+
     @PostMapping("/book/add")
-    public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra,Model model) {
+    public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra,
+            Model model) {
         try {
-            boolean ValidTitle = bookMstService.isValidTitle(bookMstDto.getTitle(), model);
-            if (ValidTitle) {
+
+            boolean errFlg = false;
+            // 入力された書籍名にエラーがないか
+            boolean isValidTitle = bookMstService.isValidTitle(bookMstDto.getTitle(), model);
+            if (isValidTitle) {
                 model.addAttribute("bookMstDto", bookMstDto);
+                errFlg = true;
             }
-            boolean ValidIsbn = bookMstService.isValidIsbn(bookMstDto.getIsbn(), model);
-            if (ValidIsbn) {
+            // 入力されたISBNにエラーがないか
+            boolean isValidIsbn = bookMstService.isValidIsbn(bookMstDto.getIsbn(), model);
+            if (isValidIsbn) {
                 model.addAttribute("bookMstDto", bookMstDto);
+                errFlg = true;
             }
-            if (ValidTitle||ValidIsbn) {
-                return "/book/add";
+            // 重複チェック
+            if (!isValidIsbn) {
+                // ISBNがすでにデータベースにあるか調べる
+                boolean isbnExist = bookMstService.selectByIsbn(bookMstDto.getIsbn(), model);
+                // すでにINBSが存在するときエラー表示
+                if (isbnExist) {
+                    model.addAttribute("bookMstDto", bookMstDto);
+                    errFlg = true;
+                }
             }
-            boolean isbnExist = bookMstService.selectByIsbn(bookMstDto.getIsbn(), model);
-            if (isbnExist) {
-                model.addAttribute("bookMstDto", bookMstDto);
+            // 書籍名・ISBNどちらかにエラーがある場合は遷移しない
+            if (errFlg) {
                 return "/book/add";
             }
 
-
-            
-                
+            // エラーなしの場合DBに登録
             this.bookMstService.save(bookMstDto);
-            
+
+            // 一覧画面に遷移
             return "redirect:/book/index";
+
         } catch (Exception e) {
+
             return "redirect:/book/add";
         }
-        
-
-     }
-
     }
 
-        
-
-    
-
-    
-
-
+}

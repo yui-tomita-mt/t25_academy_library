@@ -15,7 +15,7 @@
             <div class="inner_contens">
                 <div class="page_title">書籍登録</div>
                 <div class="page_contents">
-                    <p>＊は必須項目です</p>
+                    <p class="required-note">＊は必須項目です</p>
                     <form id="book_register_form" th:object="${bookMstDto}" th:action="@{/book/add}" method="post">
                         <div class="mb30 flexarea">
                             <span>
@@ -23,26 +23,34 @@
                             </span>
                         </div>
                         <div>
-                            <label for="title">書籍名<span>*</span></label>
-                            <input class="form_input" type="text" id="title" name="title" th:field="*{title}" placeholder="書籍名を入力">
+                            <div class="form_row">
+                                <label for="title">書籍名*:</label><br>
+                                <input class="form_input" type="text" id="title" name="title" th:field="*{title}"
+                                    placeholder="書籍名を入力"><br>
+                            </div>
                             <div class="error_msg" th:if="${errTitle}">
                                 <p th:text="${errTitle}" style="color: red;"></p>
                             </div>
                         </div>
                         <div>
-                            <label for="isbn">ISBN<span>*</span></label>
-                            <input class="form_input" type="text" id="isbn" name="isbn" th:field="*{isbn}" placeholder="ISBNを入力">
+                            <div class="form_row">
+                                <label for="isbn">ISBN*:</label><br>
+                                <input class="form_input" type="text" id="isbn" name="isbn" th:field="*{isbn}"
+                                    placeholder="ISBNを入力"><br>
+                            </div>
                             <div class="error_msg" th:if="${errIsbn}">
                                 <p th:text="${errIsbn}" style="color: red;"></p>
                             </div>
                         </div>
-                        <div>
-                            <input id="submit_btn" type="submit" value="保存">
-                        </div>
-                    </form>
+
                 </div>
+                <div class="button_area">
+                    <input id="submit_btn" type="submit" value="保存">
+                </div>
+                </form>
             </div>
         </div>
+    </div>
     </div>
     <div th:replace="~{common :: footer}"></div>
 </body>
