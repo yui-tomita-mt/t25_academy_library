@@ -85,7 +85,7 @@ public class BookController {
                 }
             }
             // 書籍名・ISBNどちらかにエラーがある場合は遷移しない
-            if (errFlg = true) {
+            if (errFlg) {
                 return "/book/add";
             }
 
