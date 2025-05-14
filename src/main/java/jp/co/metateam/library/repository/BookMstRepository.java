@@ -7,6 +7,12 @@ import jp.co.metateam.library.model.BookMst;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
+
+
+
 public interface BookMstRepository extends JpaRepository<BookMst, Long> {
 
 	@Query(value = "SELECT * FROM book_mst LIMIT 1000", nativeQuery = true)

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.micrometer.common.util.StringUtils;
@@ -56,36 +57,86 @@ public class BookController {
         return "book/add";
     }
 
+    @GetMapping("/book/edit/{id}")
+    public String editBook(@PathVariable("id") Long id, Model model) {
+        BookMst book = bookMstService.selectById(id); // IDから書籍を取得
+        if (book == null) {
+            model.addAttribute("errormessege", "指定された書籍は存在しません。");
+            return "redirect:/book/index"; // 一覧画面htmlに遷移
+        }
+        model.addAttribute("book", book); // ビューに渡す
+        return "book/edit"; // 編集用htmlへ
+    }
+
+    @PostMapping("/book/edit/{id}")
+    public String updateBook(@PathVariable Long id, @RequestParam String title, @RequestParam String isbn,
+            Model model) {
+        // IDから書籍を取得
+        BookMst book = bookMstService.selectById(id);
+        if (book == null) {
+            model.addAttribute("errorMessage", "指定された書籍は存在しません。");
+            return "book/edit"; // 編集画面に遷移
+        }
+
+        // 変更がない場合
+        if (book.getTitle().equals(title) && book.getIsbn().equals(isbn)) {
+            model.addAttribute("errorMessage", "変更内容がありません。");
+            model.addAttribute("book", book); // 編集画面に元のデータを再表示
+            return "book/edit";
+        }
+        // 書籍名の変更チェック
+        boolean isValidTitle = false;
+        if (!book.getTitle().equals(title)) {
+            // 変更があればバリデーションチェック
+            isValidTitle = bookMstService.isValidTitle(title, model);
+        }
+
+        // ISBNの変更チェック
+        boolean isValidIsbn = false;
+        boolean isbnExist = false;
+        if (!book.getIsbn().equals(isbn)) {
+            // 変更があればバリデーション、無ければ次へ
+            isValidIsbn = bookMstService.isValidIsbn(isbn, model);
+            if (!isValidIsbn) {
+                isbnExist = bookMstService.selectByIsbn(isbn, model);
+            }
+        }
+        // あればエラーを編集画面に表示
+        if (isValidTitle || isValidIsbn || isbnExist) {
+            model.addAttribute("book", book);
+            return "/book/edit";
+        }
+
+        // 書籍の更新処理
+        BookMstDto bookDto = new BookMstDto();
+        bookDto.setId(id);
+        bookDto.setTitle(title);
+        bookDto.setIsbn(isbn);
+        bookMstService.updateBook(bookDto);
+
+        return "redirect:/book/index"; // 一覧画面にリダイレクト
+    }
+
     @PostMapping("/book/add")
     public String register(@Valid @ModelAttribute BookMstDto bookMstDto, BindingResult result, RedirectAttributes ra,
             Model model) {
         try {
-
-            boolean errFlg = false;
             // 入力された書籍名にエラーがないか
             boolean isValidTitle = bookMstService.isValidTitle(bookMstDto.getTitle(), model);
-            if (isValidTitle) {
-                model.addAttribute("bookMstDto", bookMstDto);
-                errFlg = true;
-            }
+
             // 入力されたISBNにエラーがないか
             boolean isValidIsbn = bookMstService.isValidIsbn(bookMstDto.getIsbn(), model);
-            if (isValidIsbn) {
-                model.addAttribute("bookMstDto", bookMstDto);
-                errFlg = true;
-            }
+
+            boolean isbnExist = false;
             // 重複チェック
             if (!isValidIsbn) {
                 // ISBNがすでにデータベースにあるか調べる
-                boolean isbnExist = bookMstService.selectByIsbn(bookMstDto.getIsbn(), model);
-                // すでにINBSが存在するときエラー表示
-                if (isbnExist) {
-                    model.addAttribute("bookMstDto", bookMstDto);
-                    errFlg = true;
-                }
+                isbnExist = bookMstService.selectByIsbn(bookMstDto.getIsbn(), model);
+
             }
             // 書籍名・ISBNどちらかにエラーがある場合は遷移しない
-            if (errFlg) {
+            if (isValidTitle || isValidIsbn || isbnExist) {
+                model.addAttribute("bookMstDto", bookMstDto);
                 return "/book/add";
             }
 

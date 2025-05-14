@@ -14,6 +14,10 @@
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
                 <div class="page_title">書籍一覧</div>
+                <!-- エラーメッセージのポップアップ -->
+                <div class="alert-danger" th:if="${errorMessage}" role="alert">
+                    <span th:text="${errorMessage}">エラーメッセージがここに表示されます。</span>
+                </div>
                 <!-- ここから追記 -->
                 <!-- 書籍登録用のボタン（クリックされたら登録画面へ遷移） -->
                 <div class="button-area">
