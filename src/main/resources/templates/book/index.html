@@ -4,7 +4,7 @@
 <head th:replace="~{common :: meta_header('書籍一覧',~{::link},~{::script})}">
     <title th:text="${title}+' | MTLibrary'"></title>
     <link rel="stylesheet" th:href="@{/css/book/index.css}" />
-    <script type="text/javascript" th:src="@{/js/book/index.js}"></script>
+    <!-- <script type="text/javascript" th:src="@{/js/book/index.js}"></script> -->
 </head>
 
 <body>
@@ -14,19 +14,14 @@
             <div th:replace="~{common :: header}"></div>
             <div class="inner_contens">
                 <div class="page_title">書籍一覧</div>
-                <!-- エラーメッセージのポップアップ -->
-                <div class="alert-danger" th:if="${errorMessage}" role="alert">
-                    <span th:text="${errorMessage}">エラーメッセージがここに表示されます。</span>
-                </div>
                 <!-- ここから追記 -->
                 <!-- 書籍登録用のボタン（クリックされたら登録画面へ遷移） -->
-                <div class="button-area">
-                    <button class="add-button">
-                        <a onclick="location.href='./add'">
-                            <img th:src="@{/images/icons/add.png}" alt="アイコン" />書籍登録</a>
+                <div class="button_area">
+                    <button class="add-button" onclick="location.href='./add'">
+                        <img th:src="@{/images/icons/add.png}" alt="アイコン" />
+                        書籍登録
                     </button>
                 </div>
-
                 <!-- 登録情報の全件表示用テーブル -->
                 <table class="books_table">
                     <thead>
@@ -38,8 +33,12 @@
                     <tbody>
                         <!-- DBの情報を取得し"book"に格納し件数分ループを回す -->
                         <tr th:each="book : ${bookMstList}">
+
                             <!-- "book"内のタイトルを順番に取り出し表示 -->
-                            <td th:text="${book.title}"></td>
+                            <td><a th:href="@{/book/edit/{id}(id=${book.id})}">
+                                    <img class="edit_icon" th:src="@{/images/icons/edit.png}"></a>
+                                <div th:text="${book.title}"></div>
+                            </td>
                             <!-- "book"内のISBNを順番に取り出し表示 -->
                             <td th:text="${book.isbn}"></td>
                         </tr>
@@ -47,6 +46,15 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div th:replace="~{common :: footer}"></div>
 </body>
+<div id="flash-message" th:if="${errorMessage}" th:attr="data-message=${errorMessage}"></div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const msg = document.getElementById("flash-message")?.dataset.message;
+                                if (msg) {
+                                    alert(msg);
+                                }
+                            });
+                        </script>
+
+</html>

@@ -58,24 +58,25 @@ public class BookController {
     }
 
     @GetMapping("/book/edit/{id}")
-    public String editBook(@PathVariable("id") Long id, Model model) {
+    public String editBook(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         BookMst book = bookMstService.selectById(id); // IDから書籍を取得
         if (book == null) {
-            model.addAttribute("errormessege", "指定された書籍は存在しません。");
+            redirectAttributes.addFlashAttribute("errorMessage", "指定された書籍は存在しません。");
             return "redirect:/book/index"; // 一覧画面htmlに遷移
         }
         model.addAttribute("book", book); // ビューに渡す
         return "book/edit"; // 編集用htmlへ
+
     }
 
     @PostMapping("/book/edit/{id}")
     public String updateBook(@PathVariable Long id, @RequestParam String title, @RequestParam String isbn,
-            Model model) {
+            Model model, RedirectAttributes redirectAttributes) {
         // IDから書籍を取得
         BookMst book = bookMstService.selectById(id);
         if (book == null) {
-            model.addAttribute("errorMessage", "指定された書籍は存在しません。");
-            return "book/edit"; // 編集画面に遷移
+            redirectAttributes.addFlashAttribute("errorMessage", "指定された書籍は存在しません。");
+            return "redirect:/book/index"; // 編集画面に遷移
         }
 
         // 変更がない場合
