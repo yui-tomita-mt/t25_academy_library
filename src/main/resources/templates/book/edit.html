@@ -37,9 +37,10 @@
                         <div class="form-group">
                             <label for="isbn">ISBN*:</label><br>
                             <input type="text" id="isbn" class="form_input" th:name="isbn" th:value="${book.isbn}" />
-                            <div class="error_msg" th:if="${errIsbn}">
-                                <p th:text="${errIsbn}" style="color: red;"></p>
+                            <div class="error_msg" th:if="${isbnErrorlist}">
+                                <p th:each="error : ${isbnErrorlist}" th:text="${error}" style="color: red;"></p>
                             </div>
+
                         </div>
 
                         <div class="btn_block">

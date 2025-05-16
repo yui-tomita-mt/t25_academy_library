@@ -100,26 +100,26 @@ public class BookMstService {
         // ISBNが空白だった時
         if (StringUtils.isBlank(isbn)) {
             isbnErrorlist.add("ISBNを入力してください");
-            model.addAttribute("errIsbn", "ISBNを入力してください");
+            //model.addAttribute("errIsbn", "ISBNを入力してください");
             isVlidError = true;
         }
 
         // ISBNが13桁ではない
         if (isbn.length() != 13) {
             isbnErrorlist.add("ISBNは13文字で入力してください");
-            model.addAttribute("errIsbn", "ISBNは13文字で入力してください");
+            //model.addAttribute("errIsbn", "ISBNは13文字で入力してください");
             isVlidError = true;
         }
         // ISBNが半角数字以外で入力されている
         if (!isbn.matches("\\d+")) {
             isbnErrorlist.add("ISBNは半角数字で入力してください");
-            model.addAttribute("errIsbn", "ISBNは半角数字で入力してください");
+            //model.addAttribute("errIsbn", "ISBNは半角数字で入力してください");
             isVlidError = true;
         }
         // エラーリストのサイズが1件以上あった場合
         // リストを画面に表示できるように変換
         if (!isbnErrorlist.isEmpty()) {
-            model.addAttribute("errIsbn", isbnErrorlist);
+            model.addAttribute("isbnErrorlist", isbnErrorlist);
         }
 
         return isVlidError;
@@ -129,7 +129,7 @@ public class BookMstService {
         List<BookMst> selectIsbn = this.bookMstRepository.selectByIsbn(isbn);
         // selectIsbnに値が入っている場合は重複あり/エラーを表示しTrueを返却
         if (!selectIsbn.isEmpty()) {
-            model.addAttribute("errIsbn", "すでに登録されているISBNです");
+            model.addAttribute("isbnErrorlist", "すでに登録されているISBNです");
             return true;
         }
         // selectIsbnに値が入っていない場合は重複なし/Falseを返却
