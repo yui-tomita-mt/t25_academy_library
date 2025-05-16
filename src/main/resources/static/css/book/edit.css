@@ -1,0 +1,82 @@
+/* 共通のベーススタイル
+#book_edit_form {
+  font-size: 15px;
+}
+  
+
+必須項目のアスタリスク */
+#book_edit_form p .asterisk {
+  font-size: 14px;
+  margin-left: 5px;
+  margin-top: -5px;
+  color: red;
+}
+
+/* 入力フィールドのスタイル */
+#book_edit_form .form_input {
+ display: inline-block;
+  width: 70%;
+  height: 30px;
+  border: 2px solid #D9D9D9;
+  padding: 2px 10px;
+  font-size: 15px;
+}
+#book_register_form .form_input {
+  display: inline-block;
+  width: 70%;
+  height: 30px;
+  border: 2px solid #D9D9D9;
+  padding: 2px 10px;
+  font-size: 15px;
+}
+
+/* ボタンエリアのスタイル */
+#book_edit_form .btn_block {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+/* 保存ボタンのスタイル */
+#submit_btn {
+   width: 80px;
+  height: 45px;
+  font-size: 20px;
+  background-color: #9CF2D3;
+  color: #1b0e0e;
+  border-radius: 0.5rem;
+  border: none;
+  ;
+}
+
+#submit_btn:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+/* ボタンエリアのテキスト */
+.button_area {
+  text-align: center;
+  margin-top: 20px; /* お好みで余白を追加 */
+}
+
+/* 必須項目の注記 */
+.required-note {
+  color: red;
+  font-weight: bold;
+}
+
+/* リンクのスタイル */
+.link {
+  display: inline-block;
+  text-align: right;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.link:hover {
+  color: #0056b3;
+}
