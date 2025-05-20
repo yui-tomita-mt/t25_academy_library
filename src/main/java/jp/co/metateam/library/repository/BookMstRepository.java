@@ -11,16 +11,15 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-
-
 public interface BookMstRepository extends JpaRepository<BookMst, Long> {
 
-	@Query(value = "SELECT * FROM book_mst LIMIT 1000", nativeQuery = true)
+	@Query(value = "SELECT * FROM book_mst WHERE deleted_flag = FALSE LIMIT 1000", nativeQuery = true)
 	List<BookMst> findLimitedBook();
 
 	@Query(value = "SELECT * FROM book_mst WHERE id = ?1", nativeQuery = true)
 	Optional<BookMst> selectById(Long id);
 
 	@Query(value = "SELECT * FROM book_mst WHERE isbn = ?1", nativeQuery = true)
-    List<BookMst> selectByIsbn(String isbn);
+	List<BookMst> selectByIsbn(String isbn);
+
 }

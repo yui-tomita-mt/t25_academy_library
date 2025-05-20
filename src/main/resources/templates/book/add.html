@@ -38,8 +38,9 @@
                                 <input class="form_input" type="text" id="isbn" name="isbn" th:field="*{isbn}"
                                     placeholder="ISBNを入力"><br>
                             </div>
-                            <div class="error_msg" th:if="${errIsbn}">
-                                <p th:text="${errIsbn}" style="color: red;"></p>
+                            <div class="error_msg" th:if="${isbnErrorlist}">
+                                <p th:each="error : ${isbnErrorlist}" th:text="${error}" style="color: red;"></p>
+                            </div>
                             </div>
                         </div>
 

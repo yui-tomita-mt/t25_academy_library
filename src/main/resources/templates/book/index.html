@@ -37,6 +37,12 @@
                             <!-- "book"内のタイトルを順番に取り出し表示 -->
                             <td><a th:href="@{/book/edit/{id}(id=${book.id})}">
                                     <img class="edit_icon" th:src="@{/images/icons/edit.png}"></a>
+                                <a href="javascript:void(0);"
+                                    th:attr="data-id=${book.id}, data-title=${book.title}, data-isbn=${book.isbn}"
+                                    onclick="confirmDelete(this)">
+                                    <img th:src="@{/images/icons/trash.png}" alt="削除"
+                                        style="width:20px; height:20px; margin-left:4px;" />
+                                </a>
                                 <div th:text="${book.title}"></div>
                             </td>
                             <!-- "book"内のISBNを順番に取り出し表示 -->
@@ -47,14 +53,43 @@
             </div>
         </div>
 </body>
-<div id="flash-message" th:if="${errorMessage}" th:attr="data-message=${errorMessage}"></div>
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const msg = document.getElementById("flash-message")?.dataset.message;
-                                if (msg) {
-                                    alert(msg);
-                                }
-                            });
-                        </script>
+<!-- <div id="flash-message" th:if="${errorMessage}" th:attr="data-message=${errorMessage}"></div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const msg = document.getElementById("flash-message")?.dataset.message;
+        if (msg) {
+            alert(msg);
+        }
+    }); -->
+</script>
+<script>
+    function confirmDelete(element) {
+        const id = element.dataset.id;
+        const title = element.dataset.title;
+        const isbn = element.dataset.isbn;
+
+        const message = `以下の書籍を削除しますか？\n\nタイトル: ${title}\nISBN: ${isbn}`;
+        if (confirm(message)) {
+            // [OK]がクリックされた場合、削除処理を実行
+            window.location.href = `delete/${id}`;
+        }
+        // [キャンセル]がクリックされた場合、何も処理を行わない
+    }
+</script>
+<div id="flash-message"
+     th:if="${errorMessage != null or deleteMessage != null}"
+     th:attr="data-message=${errorMessage != null ? errorMessage : deleteMessage}">
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const flashElement = document.getElementById("flash-message");
+        const msg = flashElement?.dataset.message;
+        if (msg) {
+            alert(msg);
+        }
+    });
+</script>
+
 
 </html>

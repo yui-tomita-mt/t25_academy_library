@@ -22,5 +22,7 @@ public class BookMstDto {
     
     private Timestamp deletedAt;
 
+    private Boolean deletedFlag;
+
     private BookMst bookMst;
 }
