@@ -1,5 +1,7 @@
 package jp.co.metateam.library.service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +17,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.repository.BookMstRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Service
 public class BookMstService {
@@ -142,7 +146,8 @@ public class BookMstService {
     public void logicalDelete(Long id) {
         BookMst book = bookMstRepository.selectById(id).orElse(null);
         if (book != null && !book.isDeletedFlag()) {
-            book.setDeletedFlag(true);//フラグを１にする
+            book.setDeletedFlag(true);// フラグを１にする
+             book.setDeletedAt(Timestamp.from(Instant.now()));//Instant.nowから現在日時取得してセット
             bookMstRepository.save(book);
         }
     }
