@@ -2,6 +2,8 @@ package jp.co.metateam.library.service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +20,8 @@ import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.repository.BookMstRepository;
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Service
 public class BookMstService {
@@ -147,7 +150,8 @@ public class BookMstService {
         BookMst book = bookMstRepository.selectById(id).orElse(null);
         if (book != null && !book.isDeletedFlag()) {
             book.setDeletedFlag(true);// フラグを１にする
-             book.setDeletedAt(Timestamp.from(Instant.now()));//Instant.nowから現在日時取得してセット
+            Timestamp jstTimestamp = Timestamp.valueOf(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")).toLocalDateTime());
+            book.setDeletedAt(jstTimestamp);
             bookMstRepository.save(book);
         }
     }
