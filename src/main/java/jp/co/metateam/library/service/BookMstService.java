@@ -146,14 +146,10 @@ public class BookMstService {
     }
 
     // 論理削除処理
-    public void logicalDelete(Long id) {
-        BookMst book = bookMstRepository.selectById(id).orElse(null);
-        if (book != null && !book.isDeletedFlag()) {
+    public void logicalDelete(BookMst book) {
             book.setDeletedFlag(true);// フラグを１にする
             Timestamp jstTimestamp = Timestamp.valueOf(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")).toLocalDateTime());
             book.setDeletedAt(jstTimestamp);
             bookMstRepository.save(book);
         }
     }
-
-}

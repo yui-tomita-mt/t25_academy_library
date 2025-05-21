@@ -160,7 +160,7 @@ public class BookController {
         if (book == null || book.isDeletedFlag()) {
             redirectAttributes.addFlashAttribute("errorMessage", "指定された書籍は存在しません");
         } else {
-            bookMstService.logicalDelete(id);
+            bookMstService.logicalDelete(book);
             redirectAttributes.addFlashAttribute("deleteMessage", "書籍データを削除しました");
         }
         return "redirect:/book/index";
