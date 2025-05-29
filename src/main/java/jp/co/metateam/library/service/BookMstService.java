@@ -1,5 +1,9 @@
 package jp.co.metateam.library.service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.EntityNotFoundException;
 import jp.co.metateam.library.model.BookMst;
 import jp.co.metateam.library.model.BookMstDto;
 import jp.co.metateam.library.repository.BookMstRepository;
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Service
 public class BookMstService {
@@ -71,6 +79,7 @@ public class BookMstService {
             bookMst.setId(bookMstDto.getId());
             bookMst.setTitle(bookMstDto.getTitle());
             bookMst.setIsbn(bookMstDto.getIsbn());
+            bookMst.setDeletedFlag(bookMstDto.getDeletedFlag());
 
             // データベース更新
             this.bookMstRepository.save(bookMst);
@@ -100,20 +109,20 @@ public class BookMstService {
         // ISBNが空白だった時
         if (StringUtils.isBlank(isbn)) {
             isbnErrorlist.add("ISBNを入力してください");
-            //model.addAttribute("errIsbn", "ISBNを入力してください");
+            // model.addAttribute("errIsbn", "ISBNを入力してください");
             isVlidError = true;
         }
 
         // ISBNが13桁ではない
         if (isbn.length() != 13) {
             isbnErrorlist.add("ISBNは13文字で入力してください");
-            //model.addAttribute("errIsbn", "ISBNは13文字で入力してください");
+            // model.addAttribute("errIsbn", "ISBNは13文字で入力してください");
             isVlidError = true;
         }
         // ISBNが半角数字以外で入力されている
         if (!isbn.matches("\\d+")) {
             isbnErrorlist.add("ISBNは半角数字で入力してください");
-            //model.addAttribute("errIsbn", "ISBNは半角数字で入力してください");
+            // model.addAttribute("errIsbn", "ISBNは半角数字で入力してください");
             isVlidError = true;
         }
         // エラーリストのサイズが1件以上あった場合
@@ -135,4 +144,12 @@ public class BookMstService {
         // selectIsbnに値が入っていない場合は重複なし/Falseを返却
         return false;
     }
-}
+
+    // 論理削除処理
+    public void logicalDelete(BookMst book) {
+            book.setDeletedFlag(true);// フラグを１にする
+            Timestamp jstTimestamp = Timestamp.valueOf(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")).toLocalDateTime());
+            book.setDeletedAt(jstTimestamp);
+            bookMstRepository.save(book);
+        }
+    }
